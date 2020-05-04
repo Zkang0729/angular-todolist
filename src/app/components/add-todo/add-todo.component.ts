@@ -1,4 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { NewTodo } from 'src/app/models/Todo';
 
 @Component({
   selector: 'app-add-todo',
@@ -6,20 +7,25 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./add-todo.component.css'],
 })
 export class AddTodoComponent implements OnInit {
-  @Output() addTodo: EventEmitter<any> = new EventEmitter();
+  @Output() addTodo: EventEmitter<NewTodo> = new EventEmitter();
 
-  title: string;
+  public title: string = '';
 
   constructor() {}
 
   ngOnInit(): void {}
 
-  onSubmit(): void {
-    const todo = {
+  public onSubmit(): void {
+    const todo: NewTodo = {
       title: this.title,
       completed: false,
+      tmpId: 'temp',
     };
 
     this.addTodo.emit(todo);
+  }
+
+  public changeInputValue(value): void {
+    this.title = value.target.value;
   }
 }

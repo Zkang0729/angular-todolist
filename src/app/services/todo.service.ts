@@ -1,44 +1,43 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Todo } from '../models/Todo';
+import { ITodo } from '../models/Todo';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Method': '*',
-  }),
-};
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  todosUrl: string = 'https://jsonplaceholder.typicode.com/todos';
-  todosLimit = '?_limit=5';
+  readonly httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Method': '*',
+    }),
+  };
+  readonly todosUrl: string = 'https://jsonplaceholder.typicode.com/todos';
+  readonly todosLimit: string = '?_limit=5';
 
   constructor(private http: HttpClient) {}
 
   // Get Todos
-  getTodos(): Observable<Todo[]> {
-    return this.http.get<Todo[]>(`${this.todosUrl}${this.todosLimit}`);
+  public getTodos(): Observable<ITodo[]> {
+    return this.http.get<ITodo[]>(`${this.todosUrl}${this.todosLimit}`);
   }
 
   // Delete Todo
-  deleteTodo(todo: Todo): Observable<Todo> {
+  public deleteTodo(todo: ITodo): Observable<ITodo> {
     const url = `${this.todosUrl}/${todo.id}`;
-    return this.http.delete<Todo>(url, httpOptions);
+    return this.http.delete<ITodo>(url, this.httpOptions);
   }
 
   // Add Todo
-  addTodo(todo: Todo): Observable<Todo> {
-    return this.http.post<Todo>(this.todosUrl, todo, httpOptions);
+  public addTodo(todo: ITodo): Observable<ITodo> {
+    return this.http.post<ITodo>(this.todosUrl, todo, this.httpOptions);
   }
 
   // Toggle Completed
-  toggleCompleted(todo: Todo): Observable<any> {
+  public toggleCompleted(todo: ITodo): Observable<any> {
     const url = `${this.todosUrl}/${todo.id}`;
-    return this.http.put(url, todo, httpOptions);
+    return this.http.put(url, todo, this.httpOptions);
   }
 }

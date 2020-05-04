@@ -2,8 +2,9 @@
   <input
     type="text"
     name="title"
-    [(ngModel)]="title"
+    [value]="title"
     placeholder="Add Todo..."
+    (change)="changeInputValue($event)"
   />
   <input type="submit" value="Submit" class="btn" />
 </form>

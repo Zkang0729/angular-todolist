@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TodoService } from '../../services/todo.service';
-import { Todo } from '../../models/Todo';
+import { ITodo } from '../../models/Todo';
 
 @Component({
   selector: 'app-todos',
@@ -8,7 +8,8 @@ import { Todo } from '../../models/Todo';
   styleUrls: ['./todos.component.css'],
 })
 export class TodosComponent implements OnInit {
-  todos: Todo[];
+  public todos: ITodo[];
+  public isLoading: boolean = false;
 
   constructor(private todoService: TodoService) {}
 
@@ -18,18 +19,21 @@ export class TodosComponent implements OnInit {
     });
   }
 
-  deleteTodo(todo: Todo) {
+  public deleteTodo(todoItem: ITodo) {
     // Remove from UI
-    this.todos = this.todos.filter((t) => t.id !== todo.id);
+    this.todos = this.todos.filter((todo) => todo.id !== todoItem.id);
     // Remove from server
-    this.todoService.deleteTodo(todo).subscribe();
+    this.todoService.deleteTodo(todoItem).subscribe();
   }
 
-  addTodo(todo: Todo) {
+  public addTodo(todoItem: ITodo) {
+    console.log(this.isLoading);
+    this.isLoading = true;
     // Add to the server
-    this.todoService.addTodo(todo).subscribe((t) => {
-      console.log(t);
-      this.todos.push(t);
+    const addedTodo$ = this.todoService.addTodo(todoItem);
+    addedTodo$.subscribe((todo) => {
+      this.isLoading = false;
+      this.todos.push(todo);
     });
   }
 }
